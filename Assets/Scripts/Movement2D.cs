@@ -15,7 +15,7 @@ public class Movement2D : MonoBehaviour
     public float moveSpeed;     // 움직이는 속도.
     public float jumpPower;     // 점프하는 힘.
 
-    bool isGrounded;            // 땅에 서있는가?
+    public bool isGrounded;     // 땅에 서있는가?
     int jumpCount;              // 점프할 수 있는 횟수.
 
     int maxJumpCount = 1;       // 최대로 점프할 수 있는 횟수.
@@ -49,6 +49,7 @@ public class Movement2D : MonoBehaviour
     public void OnLockMovment(bool isLock)
     {
         isLockMovement = isLock;
+        rigid.velocity = new Vector2(0f, rigid.velocity.y);
     }
 
 
@@ -112,6 +113,7 @@ public class Movement2D : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && jumpCount > 0)
         {
             jumpCount--;
+            isGrounded = false;
             rigid.velocity = new Vector2(rigid.velocity.x, 0f);                 // 현재 내 y축 속도를 0으로 초기화.
             rigid.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);        // 위 방향으로 jumpPower만큼 힘을 가한다.
 
