@@ -12,7 +12,6 @@ public class Movement2D : MonoBehaviour
     public LayerMask groundMask;    // 지면 마스크.
     public float groundRadius;      // 지면 체크 원의 반지름.
 
-
     public float moveSpeed;     // 움직이는 속도.
     public float jumpPower;     // 점프하는 힘.
 
@@ -20,14 +19,21 @@ public class Movement2D : MonoBehaviour
     int jumpCount;              // 점프할 수 있는 횟수.
 
     int maxJumpCount = 1;       // 최대로 점프할 수 있는 횟수.
+    
     bool isHaveJumpItem;        // 점프 추가 횟수 증가 아이템을 먹었는가?
+    bool isLockMovement;        // 움직임을 제어할 수 없는가?
 
     // 매 프레임마다 호출되는 이벤트 함수.
     void Update()
     {
         CheckGround();
-        Movement();
-        Jump();
+
+        // 이동 제어가 잠기지 않았을 경우.
+        if (!isLockMovement)
+        {
+            Movement();
+            Jump();
+        }
 
         if(Input.GetKeyDown(KeyCode.T))
         {
@@ -39,6 +45,14 @@ public class Movement2D : MonoBehaviour
         anim.SetFloat("velocityY", rigid.velocity.y);
     }
 
+    // 외부 함수.
+    public void OnLockMovment(bool isLock)
+    {
+        isLockMovement = isLock;
+    }
+
+
+    // 내부 함수.
     private void CheckGround()
     {
         // 내가 상승 중일때는 바닥 체크를 하지 않는다.
