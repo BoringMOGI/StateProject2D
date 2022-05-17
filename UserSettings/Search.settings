@@ -7,7 +7,7 @@ onBoardingDoNotAskAgain = true
 showPackageIndexes = false
 showStatusBar = false
 scopes = {
-	"last_search.8040E7BB" = "layer>0"
+	"last_search.8040E7BB" = "playercontroller"
 	"OpenInspectorPreview.8040E7BB" = "0"
 	"currentGroup.8040E7BB" = "all"
 	"last_search.8788AF05" = "movement2d"
@@ -57,6 +57,7 @@ providers = {
 	}
 }
 recentSearches = [
+	"a"
 	"p"
 ]
 searchItemFavorites = [
