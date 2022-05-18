@@ -26,6 +26,13 @@ public class Movement2D : MonoBehaviour
 
     int jumpCount;              // 점프할 수 있는 횟수.
     int maxJumpCount = 1;       // 최대로 점프할 수 있는 횟수.
+    bool isOriginLeft;          // 최초에 왼쪽을 보고 있는가?
+
+    private void Start()
+    {
+        // 최초에 왼쪽을 보고 있느냐에 따라서 spriteRenderer의 filpX가 달라지기 때문에
+        isOriginLeft = (moveDirection == VECTOR.Left);      
+    }
 
     // 매 프레임마다 호출되는 이벤트 함수.
     void Update()
@@ -55,7 +62,11 @@ public class Movement2D : MonoBehaviour
         // 방향 전환.
         if(x != 0)
         {
-            spriteRenderer.flipX = (x <= -1);
+            if (isOriginLeft)
+                spriteRenderer.flipX = (x >= 1);
+            else
+                spriteRenderer.flipX = (x <= -1);
+
             moveDirection = (x <= -1) ? VECTOR.Left : VECTOR.Right;
         }    
     }
