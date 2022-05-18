@@ -4,14 +4,18 @@ using UnityEngine;
 
 [RequireComponent(typeof(Status))]
 public class Attackable : MonoBehaviour
-{
-    [SerializeField] Status stat;
+{    
+    [SerializeField] protected Transform attackPivot;   // 공격 체크 지점.
+    [SerializeField] private float attackRange;         // 공격 거리
+    [SerializeField] private float attackRadius;        // 공격 범위
+    [SerializeField] private bool isLeft;               // 좌측 공격인가?
 
-    [Header("Attack")]
-    [SerializeField] Transform attackPivot;     // 공격 체크 지점.
-    [SerializeField] float attackRange;         // 공격 거리
-    [SerializeField] float attackRadius;        // 공격 범위
-    [SerializeField] bool isLeft;               // 좌측 공격인가?
+    private Status stat;
+
+    private void Start()
+    {
+        stat = GetComponent<Status>();
+    }
 
     private Vector2 GetAttackPosition()
     {
@@ -35,13 +39,14 @@ public class Attackable : MonoBehaviour
         }
     }
 
+
     // OnDrawGizmos : 상시 기즈모를 그린다
     // OnDrawGizmosSelected : 해당 오브젝트를 선택해야 기즈모를 그린다.
-    private void OnDrawGizmosSelected()
+    protected void OnDrawGizmosSelected()
     {
         if (attackPivot != null)
         {
-            Gizmos.color = Color.green;
+            Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(GetAttackPosition(), attackRadius);
         }
     }
