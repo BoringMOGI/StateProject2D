@@ -11,7 +11,7 @@ public class EnemyController : CharactorController
     [Header("Input")]
     [SerializeField] bool isInputLeft;      // 왼쪽 입력을 했는가?
 
-    new AttackableEnemy attackable;
+    AttackableEnemy attackable;
 
     private new void Start()
     {
@@ -23,6 +23,7 @@ public class EnemyController : CharactorController
     {
         CheckWall();
         CheckFall();
+
         Attack();
 
         if(!isAttack)
@@ -59,17 +60,25 @@ public class EnemyController : CharactorController
         // 내가 공격중이 아니면서 적을 탐지했을 경우.
         if (!isAttack && attackable.isSearchEnemy)
         {
-            isAttack = true;
-            anim.SetTrigger("onAttack");
-            Movement(0);
+            isAttack = true;                    // 공격 중인지?
+            anim.SetTrigger("onAttack");        // 애니메이션 트리거.
+            Movement(0);                        // 움직임 멈추기.
+            //attackable.Attack(isInputLeft);     // 실제 공격하기.
         }
     }
-
     private void Movement(float inputX)
     {
         this.inputX = inputX;
         movement.Move(inputX);
     }
+
+
+    protected override void OnAttack()
+    {
+        attackable.Attack(movement.moveDirection == VECTOR.Left);
+    }
+
+
     private void OnDrawGizmosSelected()
     {
         if (eyePivot != null)

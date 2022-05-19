@@ -6,6 +6,7 @@ using UnityEngine;
 public class Attackable : MonoBehaviour
 {    
     [SerializeField] protected Transform attackPivot;   // 공격 체크 지점.
+    [SerializeField] private LayerMask attackMask;      // 공격 대상 마스크.
     [SerializeField] private float attackRange;         // 공격 거리
     [SerializeField] private float attackRadius;        // 공격 범위
     [SerializeField] private bool isLeft;               // 좌측 공격인가?
@@ -29,7 +30,7 @@ public class Attackable : MonoBehaviour
     public void Attack(bool isLeft)
     {
         this.isLeft = isLeft;
-        Collider2D[] hits = Physics2D.OverlapCircleAll(GetAttackPosition(), attackRadius);
+        Collider2D[] hits = Physics2D.OverlapCircleAll(GetAttackPosition(), attackRadius, attackMask);
         foreach (Collider2D hit in hits)
         {
             // 충돌 체크한 대상에게서 Damageable 컴포넌트를 검색.

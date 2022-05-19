@@ -319,7 +319,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 176154957}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: GroundPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -359,7 +359,7 @@ GameObject:
   - component: {fileID: 231942040}
   - component: {fileID: 231942041}
   - component: {fileID: 231942044}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -507,6 +507,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 231942035}
   stat: {fileID: 231942041}
+  OnDamageEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeadEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &231942041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -522,7 +528,7 @@ MonoBehaviour:
   name: "\uAD6C\uC6B8"
   maxHp: 100
   hp: 100
-  power: 10
+  power: 40
 --- !u!114 &231942042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -577,6 +583,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackPivot: {fileID: 1183698109}
+  attackMask:
+    serializedVersion: 2
+    m_Bits: 64
   attackRange: 1.02
   attackRadius: 0.43
   isLeft: 1
@@ -1053,6 +1062,7 @@ GameObject:
   - component: {fileID: 583210495}
   - component: {fileID: 583210501}
   - component: {fileID: 583210500}
+  - component: {fileID: 583210502}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -1252,9 +1262,56 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackPivot: {fileID: 1341926936}
-  attackRange: 0.5
-  attackRadius: 0.4
+  attackMask:
+    serializedVersion: 2
+    m_Bits: 256
+  attackRange: 0.6
+  attackRadius: 0.45
   isLeft: 0
+--- !u!114 &583210502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 583210492}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c9e673c57be050438938231f9a8462b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 583210493}
+  stat: {fileID: 583210500}
+  OnDamageEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 583210499}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnUpdateUserInfo
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDeadEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 583210499}
+        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
+        m_MethodName: OnDead
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &846933340
 GameObject:
   m_ObjectHideFlags: 0
@@ -1375,7 +1432,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1183698109}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: AttackPivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1406,7 +1463,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1327802836}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: EyePivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
