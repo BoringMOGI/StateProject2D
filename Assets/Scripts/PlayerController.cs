@@ -6,14 +6,21 @@ public class PlayerController : CharactorController
 {
     [SerializeField] UserInfoUI userInfo;       // 유저 정보 UI.
 
-    Attackable attackable;     // 공격 관련 클래스.
-    bool isLockMovement;       // 움직임을 제어할 수 없는가?
+    Attackable attackable;      // 공격 관련 클래스.
+    Rigidbody rigid;            // 물리 처리자.
+    Collider2D collier2D;       // 충돌체.
+    
+    bool isLockMovement;        // 움직임을 제어할 수 없는가?
 
     private new void Start()
     {
         base.Start();   // 상위 클래스의 Start호출.
 
-        attackable = GetComponent<Attackable>();    // 내 컴포넌트를 검색한다.
+        // 내 컴포넌트를 검색한다.
+        attackable = GetComponent<Attackable>();
+        rigid = GetComponent<Rigidbody>();
+        collier2D = GetComponent<Collider2D>();
+
         OnUpdateUserInfo();
     }
     private void Update()
@@ -25,7 +32,7 @@ public class PlayerController : CharactorController
         inputX = Input.GetAxisRaw("Horizontal");
 
         // 공격중이 아니고 살아있을 경우 제어가능.
-        if (!isAttack && isAlive)
+        if (!isAttack && isAlive && !isLockMovement)
         {
             Movement(inputX);
             Jump();
@@ -57,15 +64,48 @@ public class PlayerController : CharactorController
     }
 
     // 이벤트 함수.
-    public void OnDead()
+    public void OnDamaged(Transform attacker, int power)
     {
-        anim.SetTrigger("onDead");
+        if (isAlive == false)
+            return;
+
+        stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);      // 체력 조정.
+        OnUpdateUserInfo();                                         // UI 업데이트.
+
+        if (stat.hp <= 0)
+        {
+            anim.SetTrigger("onDead");
+            Time.timeScale = 0.5f;
+            Invoke(nameof(ResetTimeScale), 2f * Time.timeScale);    // Invoke는 n초 뒤에 원하는 함수를 호출한다.
+        }
+        else
+        {
+            anim.SetTrigger("onDamage");
+
+            // 상대와 나의 방향을 생각해서 날려보낸다.
+            bool isLeftTarget = transform.position.x > attacker.position.x;
+            Vector2 dir = new Vector2(isLeftTarget ? 1 : -1, 1);
+            movement.Throw(dir, 1.5f);
+            isLockMovement = true;
+
+            // 날아간 이후 땅에 착지했는지 체크하는 코루틴.
+            StartCoroutine(CheckEndThrow());
+        }
     }
 
-    public void OnDamaged()
+    private IEnumerator CheckEndThrow()
     {
-        anim.SetTrigger("onDamage");
+        // 내가 땅에 있지 않을 경우 계속 반복.
+        while(!movement.isGrounded)
+            yield return null;
+
+        isLockMovement = false;
     }
+    private void ResetTimeScale()
+    {
+        Time.timeScale = 1f;
+    }
+
     public void OnUpdateUserInfo()
     {
         userInfo.Setup(stat.name);                  // 유저 정보 UI에 이름 전달.
