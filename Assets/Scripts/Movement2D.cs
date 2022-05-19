@@ -89,6 +89,11 @@ public class Movement2D : MonoBehaviour
     {
         rigid.velocity = new Vector2(0f, rigid.velocity.y);
     }
+    public void Throw(Vector2 dir, float power)
+    {
+        // dir방향으로 power만큼의 힘을 가한다.
+        rigid.AddForce(dir * power, ForceMode2D.Impulse);
+    }
 
     private void OnDrawGizmos()
     {

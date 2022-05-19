@@ -61,6 +61,11 @@ public class PlayerController : CharactorController
     {
         anim.SetTrigger("onDead");
     }
+
+    public void OnDamaged()
+    {
+        anim.SetTrigger("onDamage");
+    }
     public void OnUpdateUserInfo()
     {
         userInfo.Setup(stat.name);                  // 유저 정보 UI에 이름 전달.

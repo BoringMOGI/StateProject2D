@@ -10,10 +10,18 @@ public class Damageable : MonoBehaviour
 {
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] Status stat;
+    
+    [Header("Throw")]
+    [SerializeField] Movement2D movement2D;         // 이동 관련 클래스.
+    [SerializeField] Vector2 throwDir;              // 피격시 날아가는 방향.
+    [SerializeField] float throwPower;              // 피격시 날아가는 힘.
 
     [Header("Event")]
     [SerializeField] UnityEvent OnDamageEvent;
     [SerializeField] UnityEvent OnDeadEvent;
+
+    //[SerializeField] UnityEvent<Transform, Status> OnDamagedEvent;
+
     public bool isAlive => stat.hp > 0;
 
     public void OnDamaged(Transform attacker, int power)
@@ -28,7 +36,9 @@ public class Damageable : MonoBehaviour
         // Mathf.Clamp(값, 최소값, 최대값)
         //  => 값을 최소~최대의 사이 값으로 조정.
         stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);
-        OnDamageEvent?.Invoke();             // 이벤트 호출.
+
+        OnDamageEvent?.Invoke();                    // 이벤트 호출.
+        movement2D.Throw(throwDir, throwPower);     // 피격시 날아감.
 
         if(isAlive)
         {

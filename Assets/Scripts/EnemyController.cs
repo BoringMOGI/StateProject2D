@@ -7,6 +7,8 @@ public class EnemyController : CharactorController
     [SerializeField] Transform eyePivot;
     [SerializeField] float eyeRange;
     [SerializeField] LayerMask eyeMask;
+    [SerializeField] Collider2D collider;
+    [SerializeField] Rigidbody2D rigid;
 
     [Header("Input")]
     [SerializeField] bool isInputLeft;      // 왼쪽 입력을 했는가?
@@ -21,6 +23,10 @@ public class EnemyController : CharactorController
 
     private void Update()
     {
+        // 내가 생존해있지 않으면 업데이트를 멈춘다.
+        if (isAlive == false)
+            return;
+
         CheckWall();
         CheckFall();
 
@@ -63,7 +69,6 @@ public class EnemyController : CharactorController
             isAttack = true;                    // 공격 중인지?
             anim.SetTrigger("onAttack");        // 애니메이션 트리거.
             Movement(0);                        // 움직임 멈추기.
-            //attackable.Attack(isInputLeft);     // 실제 공격하기.
         }
     }
     private void Movement(float inputX)
@@ -72,7 +77,19 @@ public class EnemyController : CharactorController
         movement.Move(inputX);
     }
 
+    private void OnDead()
+    {
+        anim.SetTrigger("onDead");      // 애니메이션 트리거 동작.
+        movement.OnStopForce();         // 움직임 멈추기.
+        collider.enabled = false;       // 충돌체 끄기.
+        rigid.isKinematic = true;       // 물리 연산 하지 않겠다.
+    }
+    private void OnDeadDestroy()
+    {
+        Destroy(gameObject);            // 자신의 오브젝트를 삭제한다.
+    }
 
+    // 애니메이션 클립에서 부르는 이벤트 함수.
     protected override void OnAttack()
     {
         attackable.Attack(movement.moveDirection == VECTOR.Left);
