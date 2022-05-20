@@ -9,11 +9,14 @@ public class EnemyController : CharactorController
     [SerializeField] LayerMask eyeMask;
     [SerializeField] Collider2D collider;
     [SerializeField] Rigidbody2D rigid;
+    [SerializeField] HpBarUI hpUi;
 
     [Header("Input")]
     [SerializeField] bool isInputLeft;      // 왼쪽 입력을 했는가?
 
-    AttackableEnemy attackable;
+    AttackableEnemy attackable;             // 공격 클래스.
+    bool isKnockback;                       // 넉백 상태다.
+    Coroutine knockbackCoroutine;           // 넉백 코루틴.
 
     private new void Start()
     {
@@ -24,16 +27,24 @@ public class EnemyController : CharactorController
     private void Update()
     {
         // 내가 생존해있지 않으면 업데이트를 멈춘다.
-        if (isAlive == false)
+        if (isAlive == false || isKnockback)
             return;
-
+        
         CheckWall();
         CheckFall();
 
-        Attack();
+        if(attackable.isSearchEnemy)
+            Attack();
 
         if(!isAttack)
             Movement(isInputLeft ? -1 : 1);
+    }
+
+    // 애니메이션 파라미터 동기화.
+    private new void LateUpdate()
+    {
+        base.LateUpdate();
+        anim.SetBool("isKnockback", isKnockback);
     }
 
     // 벽 체크.
@@ -61,35 +72,50 @@ public class EnemyController : CharactorController
         }
     }
 
-    private void Attack()
+  
+
+    public void OnDamaged(Transform attacker, int power)
     {
-        // 내가 공격중이 아니면서 적을 탐지했을 경우.
-        if (!isAttack && attackable.isSearchEnemy)
+        if (stat.hp <= 0)
+            return;
+
+        stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);      // 체력 조정.
+        hpUi.UpdateHp(stat.hp, stat.maxHp);                         // 체력바 업데이트.
+        movement.OnStopForce();
+
+        if (stat.hp <= 0)
         {
-            isAttack = true;                    // 공격 중인지?
-            anim.SetTrigger("onAttack");        // 애니메이션 트리거.
-            Movement(0);                        // 움직임 멈추기.
+            anim.SetTrigger("onDead");
+        }
+        else
+        {
+            anim.SetTrigger("onDamage");
+
+            // 이전 코루틴이 돌아가고 있다면 취소.
+            if (knockbackCoroutine != null)
+                StopCoroutine(knockbackCoroutine);
+
+            // 새로운 코루틴 실행 후 대입.
+            knockbackCoroutine = StartCoroutine(Knockback());
         }
     }
-    private void Movement(float inputX)
+    private void OnDeadDestroy()
+    {
+        Destroy(gameObject);
+    }
+    IEnumerator Knockback()
+    {
+        isKnockback = true;
+        yield return new WaitForSeconds(1f);
+        isKnockback = false;
+    }
+
+
+    protected override void Movement(float inputX)
     {
         this.inputX = inputX;
         movement.Move(inputX);
     }
-
-    private void OnDead()
-    {
-        anim.SetTrigger("onDead");      // 애니메이션 트리거 동작.
-        movement.OnStopForce();         // 움직임 멈추기.
-        collider.enabled = false;       // 충돌체 끄기.
-        rigid.isKinematic = true;       // 물리 연산 하지 않겠다.
-    }
-    private void OnDeadDestroy()
-    {
-        Destroy(gameObject);            // 자신의 오브젝트를 삭제한다.
-    }
-
-    // 애니메이션 클립에서 부르는 이벤트 함수.
     protected override void OnAttack()
     {
         attackable.Attack(movement.moveDirection == VECTOR.Left);

@@ -40,19 +40,21 @@ public class PlayerController : CharactorController
         }
     }
 
-    public void Attack()
+    protected override void Attack()
     {
-        if (Input.GetKeyDown(KeyCode.Z) && !isAttack && movement.isGrounded)
-        {
-            anim.SetTrigger("onAttack");
-            isAttack = true;
-            Movement(0);
-        }
+        if (Input.GetKeyDown(KeyCode.Z) && movement.isGrounded)
+            base.Attack();
     }
-    private void Movement(float x)
+    protected override void OnAttack()
+    {
+        // 상위 클래스의 가상 함수를 오버라이딩.
+        attackable.Attack(movement.moveDirection == VECTOR.Left);
+    }
+    protected override void Movement(float x)
     {
         movement.Move(x);                           // 실제 움직임을 담당하는 Movement2D에 x입력 값 전달.
     }
+
     private void Jump(bool isForce = false)
     {   
         // 점프키를 눌렀을 때, movement에게 Jump함수를 호출.
@@ -71,6 +73,7 @@ public class PlayerController : CharactorController
 
         stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);      // 체력 조정.
         OnUpdateUserInfo();                                         // UI 업데이트.
+        OnEndAttack();                                              // 공격 중지.
 
         if (stat.hp <= 0)
         {
@@ -112,9 +115,5 @@ public class PlayerController : CharactorController
         userInfo.UpdateHp(stat.hp, stat.maxHp);     // 유저 정보 UI에 현재 체력과 최대 체력 전달.
     }
 
-    protected override void OnAttack()
-    {
-        // 상위 클래스의 가상 함수를 오버라이딩.
-        attackable.Attack(movement.moveDirection == VECTOR.Left);
-    }
+
 }
