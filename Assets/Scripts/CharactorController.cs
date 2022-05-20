@@ -7,8 +7,9 @@ public abstract class CharactorController : MonoBehaviour
     protected Animator anim;             // 애니메이터.
     protected Status stat;               // 캐릭의 상태 정보.
     protected Movement2D movement;       // 이동 관련 클래스.
-    protected Attackable attackable;     // 공격 관련 클래스.
-    
+    protected Collider2D collider2D;     // 충돌체.
+    protected Rigidbody2D rigid;         // 물리 연산 클래스.
+
     protected bool isAttack;             // 공격중인가?
     protected float inputX;              // x축 방향 입력 값.
 
@@ -20,7 +21,10 @@ public abstract class CharactorController : MonoBehaviour
         anim = GetComponent<Animator>();
         stat = GetComponent<Status>();
         movement = GetComponent<Movement2D>();
-        attackable = GetComponent<Attackable>();
+        collider2D = GetComponent<Collider2D>();
+        rigid = GetComponent<Rigidbody2D>();
+
+        OnUpdateUI();
     }
     protected void LateUpdate()
     {
@@ -33,7 +37,7 @@ public abstract class CharactorController : MonoBehaviour
     // 애니메이션 이벤트 함수.
     protected virtual void Attack()
     {
-        // 내가 공격중이 아니면서 적을 탐지했을 경우.
+        // 내가 공격중이 아니면.
         if (!isAttack)
         {
             isAttack = true;                    // 공격 중인지?
@@ -41,11 +45,35 @@ public abstract class CharactorController : MonoBehaviour
             Movement(0);                        // 움직임 멈추기.
         }
     }
-    protected void OnEndAttack()
+    private void OnEndAttack()
     {
         isAttack = false;
     }
+    public void OnDamaged(Transform attacker, int power)
+    {
+        if (isAlive == false)
+            return;
 
+        stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);
+        movement.OnStopForce();
+        OnEndAttack();
+        OnUpdateUI();
+
+        if(isAlive)
+        {
+            anim.SetTrigger("onDamage");
+            Damaged(attacker, power);
+        }
+        else
+        {
+            anim.SetTrigger("onDead");
+            Dead();
+        }
+    }
+
+    protected abstract void OnUpdateUI();
+    protected abstract void Damaged(Transform attacker, int power);
+    protected abstract void Dead();
     protected abstract void OnAttack();
     protected abstract void Movement(float inputX);
 }

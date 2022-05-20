@@ -4,24 +4,17 @@ using UnityEngine;
 
 public class PlayerController : CharactorController
 {
-    [SerializeField] UserInfoUI userInfo;       // 유저 정보 UI.
+    [SerializeField] UserInfoUI userInfo; // 유저 정보 UI.
 
     Attackable attackable;      // 공격 관련 클래스.
-    Rigidbody rigid;            // 물리 처리자.
-    Collider2D collier2D;       // 충돌체.
-    
     bool isLockMovement;        // 움직임을 제어할 수 없는가?
 
     private new void Start()
     {
         base.Start();   // 상위 클래스의 Start호출.
 
-        // 내 컴포넌트를 검색한다.
         attackable = GetComponent<Attackable>();
-        rigid = GetComponent<Rigidbody>();
-        collier2D = GetComponent<Collider2D>();
-
-        OnUpdateUserInfo();
+        isLockMovement = false;
     }
     private void Update()
     {
@@ -66,34 +59,21 @@ public class PlayerController : CharactorController
     }
 
     // 이벤트 함수.
-    public void OnDamaged(Transform attacker, int power)
+    protected override void Damaged(Transform attacker, int power)
     {
-        if (isAlive == false)
-            return;
+        // 상대와 나의 방향을 생각해서 날려보낸다.
+        bool isLeftTarget = transform.position.x > attacker.position.x;
+        Vector2 dir = new Vector2(isLeftTarget ? 1 : -1, 1);
+        movement.Throw(dir, 1.5f);
+        isLockMovement = true;
 
-        stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);      // 체력 조정.
-        OnUpdateUserInfo();                                         // UI 업데이트.
-        OnEndAttack();                                              // 공격 중지.
-
-        if (stat.hp <= 0)
-        {
-            anim.SetTrigger("onDead");
-            Time.timeScale = 0.5f;
-            Invoke(nameof(ResetTimeScale), 2f * Time.timeScale);    // Invoke는 n초 뒤에 원하는 함수를 호출한다.
-        }
-        else
-        {
-            anim.SetTrigger("onDamage");
-
-            // 상대와 나의 방향을 생각해서 날려보낸다.
-            bool isLeftTarget = transform.position.x > attacker.position.x;
-            Vector2 dir = new Vector2(isLeftTarget ? 1 : -1, 1);
-            movement.Throw(dir, 1.5f);
-            isLockMovement = true;
-
-            // 날아간 이후 땅에 착지했는지 체크하는 코루틴.
-            StartCoroutine(CheckEndThrow());
-        }
+        // 날아간 이후 땅에 착지했는지 체크하는 코루틴.
+        StartCoroutine(CheckEndThrow());
+    }
+    protected override void Dead()
+    {
+        Time.timeScale = 0.5f;
+        Invoke(nameof(ResetTimeScale), 2f * Time.timeScale);    // Invoke는 n초 뒤에 원하는 함수를 호출한다.
     }
 
     private IEnumerator CheckEndThrow()
@@ -109,11 +89,9 @@ public class PlayerController : CharactorController
         Time.timeScale = 1f;
     }
 
-    public void OnUpdateUserInfo()
+    protected override void OnUpdateUI()
     {
         userInfo.Setup(stat.name);                  // 유저 정보 UI에 이름 전달.
         userInfo.UpdateHp(stat.hp, stat.maxHp);     // 유저 정보 UI에 현재 체력과 최대 체력 전달.
     }
-
-
 }

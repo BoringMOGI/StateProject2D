@@ -509,7 +509,19 @@ MonoBehaviour:
   spriteRenderer: {fileID: 231942035}
   OnDamageEvent:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 231942043}
+        m_TargetAssemblyTypeName: EnemyController, Assembly-CSharp
+        m_MethodName: OnDamaged
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &231942041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -566,9 +578,7 @@ MonoBehaviour:
   eyeMask:
     serializedVersion: 2
     m_Bits: 128
-  collider: {fileID: 231942037}
-  rigid: {fileID: 231942038}
-  isInputLeft: 1
+  hpUi: {fileID: 589876530}
 --- !u!114 &231942044
 MonoBehaviour:
   m_ObjectHideFlags: 0

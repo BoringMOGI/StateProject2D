@@ -4,19 +4,18 @@ using UnityEngine;
 
 public class EnemyController : CharactorController
 {
+    [Header("Eye")]
     [SerializeField] Transform eyePivot;
     [SerializeField] float eyeRange;
     [SerializeField] LayerMask eyeMask;
-    [SerializeField] Collider2D collider;
-    [SerializeField] Rigidbody2D rigid;
+
+    [Header("UI")]
     [SerializeField] HpBarUI hpUi;
 
-    [Header("Input")]
-    [SerializeField] bool isInputLeft;      // 왼쪽 입력을 했는가?
-
+    Coroutine knockbackCoroutine;           // 넉백 코루틴.
     AttackableEnemy attackable;             // 공격 클래스.
     bool isKnockback;                       // 넉백 상태다.
-    Coroutine knockbackCoroutine;           // 넉백 코루틴.
+    bool isInputLeft;                       // 왼쪽 입력을 했는가?
 
     private new void Start()
     {
@@ -32,9 +31,7 @@ public class EnemyController : CharactorController
         
         CheckWall();
         CheckFall();
-
-        if(attackable.isSearchEnemy)
-            Attack();
+        Attack();
 
         if(!isAttack)
             Movement(isInputLeft ? -1 : 1);
@@ -72,55 +69,48 @@ public class EnemyController : CharactorController
         }
     }
 
-  
-
-    public void OnDamaged(Transform attacker, int power)
+    protected override void Attack()
     {
-        if (stat.hp <= 0)
-            return;
-
-        stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);      // 체력 조정.
-        hpUi.UpdateHp(stat.hp, stat.maxHp);                         // 체력바 업데이트.
-        movement.OnStopForce();
-
-        if (stat.hp <= 0)
-        {
-            anim.SetTrigger("onDead");
-        }
-        else
-        {
-            anim.SetTrigger("onDamage");
-
-            // 이전 코루틴이 돌아가고 있다면 취소.
-            if (knockbackCoroutine != null)
-                StopCoroutine(knockbackCoroutine);
-
-            // 새로운 코루틴 실행 후 대입.
-            knockbackCoroutine = StartCoroutine(Knockback());
-        }
+        if(attackable.isSearchEnemy)
+            base.Attack();
     }
-    private void OnDeadDestroy()
+    protected override void OnAttack()
     {
-        Destroy(gameObject);
+        attackable.Attack(movement.moveDirection == VECTOR.Left);
     }
+    protected override void Movement(float inputX)
+    {
+        this.inputX = inputX;
+        movement.Move(inputX);
+    }
+    protected override void Damaged(Transform attacker, int power)
+    {
+        // 이전 코루틴이 돌아가고 있다면 취소.
+        if (knockbackCoroutine != null)
+            StopCoroutine(knockbackCoroutine);
+
+        // 새로운 코루틴 실행 후 대입.
+        knockbackCoroutine = StartCoroutine(Knockback());
+    }
+    protected override void Dead()
+    {
+        
+    }
+    protected override void OnUpdateUI()
+    {
+        hpUi.UpdateHp(stat.hp, stat.maxHp);
+    }
+
     IEnumerator Knockback()
     {
         isKnockback = true;
         yield return new WaitForSeconds(1f);
         isKnockback = false;
     }
-
-
-    protected override void Movement(float inputX)
+    private void OnDeadDestroy()
     {
-        this.inputX = inputX;
-        movement.Move(inputX);
+        Destroy(gameObject);
     }
-    protected override void OnAttack()
-    {
-        attackable.Attack(movement.moveDirection == VECTOR.Left);
-    }
-
 
     private void OnDrawGizmosSelected()
     {
