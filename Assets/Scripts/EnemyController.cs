@@ -4,13 +4,12 @@ using UnityEngine;
 
 public class EnemyController : CharactorController
 {
+    [SerializeField] Transform hpPivot;
+
     [Header("Eye")]
     [SerializeField] Transform eyePivot;
     [SerializeField] float eyeRange;
     [SerializeField] LayerMask eyeMask;
-
-    [Header("UI")]
-    [SerializeField] HpBarUI hpUi;
 
     Coroutine knockbackCoroutine;           // 넉백 코루틴.
     AttackableEnemy attackable;             // 공격 클래스.
@@ -21,6 +20,9 @@ public class EnemyController : CharactorController
     {
         base.Start();
         attackable = GetComponent<AttackableEnemy>();
+
+        HpBarUI hpBar = HpBarManager.Instance.GetHpBar();       // HP매니저에게서 hpBar를 하나 꺼내온다.
+        hpBar.Setup(hpPivot, stat);                             // 해당 hpBar에 내 정보를 세팅한다.
     }
 
     private void Update()
@@ -98,7 +100,7 @@ public class EnemyController : CharactorController
     }
     protected override void OnUpdateUI()
     {
-        hpUi.UpdateHp(stat.hp, stat.maxHp);
+        // hpUi.UpdateHp(stat.hp, stat.maxHp);
     }
 
     IEnumerator Knockback()
