@@ -8,6 +8,7 @@ public class UserInfoUI : MonoBehaviour
     [SerializeField] Text userNameText;
     [SerializeField] Text hpText;
     [SerializeField] Image hpImage;
+    [SerializeField] Text gemText;
 
     public void Setup(string userName)
     {
@@ -17,5 +18,9 @@ public class UserInfoUI : MonoBehaviour
     {
         hpText.text = string.Format("{0}/{1}", current, max);
         hpImage.fillAmount = current / max;
+    }
+    public void UpdateGem(int amount)
+    {
+        gemText.text = amount.ToString();
     }
 }

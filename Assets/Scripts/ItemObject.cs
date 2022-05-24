@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ItemObject : MonoBehaviour
 {
+    [SerializeField] Animator anim;
+    [SerializeField] Collider2D collider2D;
     [SerializeField] int amount;
 
     // 트리거가 충돌체랑 충돌했을때 한 번 불리는 이벤트 함수.
@@ -14,8 +16,9 @@ public class ItemObject : MonoBehaviour
         PlayerController player = collision.GetComponent<PlayerController>();
         if(player != null)
         {
-            player.GetGold(amount);
-            Destroy(gameObject);
+            player.GetGem(amount);     // 플레이어에게 골드 전달.
+            anim.SetTrigger("onEat");   // 애니메이션 호출.
+            collider2D.enabled = false; // 출돌체 끄기.
         }
     }
     // 트리거가 충돌체랑 충돌하는 동안 계속 불리는 이벤트 함수.
@@ -25,5 +28,10 @@ public class ItemObject : MonoBehaviour
     // 트리거가 충돌체랑 떨어졌을 때 한 번 불리는 이벤트 함수.
     private void OnTriggerExit2D(Collider2D collision)
     {
+    }
+
+    public void OnEndEffect()
+    {
+        Destroy(gameObject);
     }
 }

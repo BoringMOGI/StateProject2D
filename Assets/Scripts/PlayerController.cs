@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerController : CharactorController
 {
     [SerializeField] UserInfoUI userInfo;   // 유저 정보 UI.
-    [SerializeField] int gold;              // 플레이어 소지 골드.
+    [SerializeField] int gem;              // 플레이어 소지 골드.
 
     Attackable attackable;      // 공격 관련 클래스.
     bool isLockMovement;        // 움직임을 제어할 수 없는가?
@@ -16,6 +16,8 @@ public class PlayerController : CharactorController
 
         attackable = GetComponent<Attackable>();
         isLockMovement = false;
+
+        OnUpdateUI();
     }
     private void Update()
     {
@@ -61,9 +63,10 @@ public class PlayerController : CharactorController
 
 
 
-    public void GetGold(int amount)
+    public void GetGem(int amount)
     {
-        gold += amount;
+        gem += amount;
+        OnUpdateUI();
     }
 
 
@@ -103,5 +106,6 @@ public class PlayerController : CharactorController
     {
         userInfo.Setup(stat.name);                  // 유저 정보 UI에 이름 전달.
         userInfo.UpdateHp(stat.hp, stat.maxHp);     // 유저 정보 UI에 현재 체력과 최대 체력 전달.
+        userInfo.UpdateGem(gem);                    // 유저의 보석양을 전달.
     }
 }
