@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class PlayerController : CharactorController
 {
-    [SerializeField] UserInfoUI userInfo; // 유저 정보 UI.
+    [SerializeField] UserInfoUI userInfo;   // 유저 정보 UI.
+    [SerializeField] int gold;              // 플레이어 소지 골드.
 
     Attackable attackable;      // 공격 관련 클래스.
     bool isLockMovement;        // 움직임을 제어할 수 없는가?
@@ -57,6 +58,15 @@ public class PlayerController : CharactorController
             anim.SetTrigger("onJump");
         }
     }
+
+
+
+    public void GetGold(int amount)
+    {
+        gold += amount;
+    }
+
+
 
     // 이벤트 함수.
     protected override void Damaged(Transform attacker, int power)
