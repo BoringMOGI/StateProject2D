@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 7287700914710250169}
   - component: {fileID: -1403119873464947585}
   - component: {fileID: 2605198703430904310}
-  - component: {fileID: 4677756949144238381}
+  - component: {fileID: 7235065024110914312}
+  - component: {fileID: 1843168697714797046}
   m_Layer: 12
   m_Name: Gem
   m_TagString: Untagged
@@ -75,7 +76,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: bd59bf2e866ed4529ae645637eb9c11d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -133,7 +134,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &4677756949144238381
+--- !u!114 &7235065024110914312
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -142,9 +143,36 @@ MonoBehaviour:
   m_GameObject: {fileID: 7287700914710250167}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8998edef24b76d46b083e03a5413f31, type: 3}
+  m_Script: {fileID: 11500000, guid: 1cf55a1d4ff81f6478f4fc0d105cb2a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1843168697714797046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7287700914710250167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2c283a984f36f2489730852ad8b8f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 2605198703430904310}
-  collider2D: {fileID: -1403119873464947585}
+  OnEatItemEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7235065024110914312}
+        m_TargetAssemblyTypeName: AudioSeHandler, Assembly-CSharp
+        m_MethodName: PlaySE
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: d9419ba0bfac1e84a95418ac5851caf6, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   amount: 10
+  boxCollider: {fileID: -1403119873464947585}

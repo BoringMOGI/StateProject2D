@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerController : CharactorController
 {
     [SerializeField] UserInfoUI userInfo;   // 유저 정보 UI.
     [SerializeField] int gem;              // 플레이어 소지 골드.
+
+    [Header("Event")]
+    [SerializeField] UnityEvent OnAttackEvent;
 
     Attackable attackable;      // 공격 관련 클래스.
     bool isLockMovement;        // 움직임을 제어할 수 없는가?
@@ -44,6 +48,7 @@ public class PlayerController : CharactorController
     protected override void OnAttack()
     {
         // 상위 클래스의 가상 함수를 오버라이딩.
+        OnAttackEvent?.Invoke();
         attackable.Attack(movement.moveDirection == VECTOR.Left);
     }
     protected override void Movement(float x)

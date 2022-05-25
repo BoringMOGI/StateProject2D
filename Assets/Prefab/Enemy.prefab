@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 4466670779930375296}
   - component: {fileID: 4466670779930375300}
   - component: {fileID: 4466670779930375301}
+  - component: {fileID: 8571310715259098354}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -201,7 +202,23 @@ MonoBehaviour:
   eyeRange: 0.5
   eyeMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 384
+  OnAttackEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 8571310715259098354}
+        m_TargetAssemblyTypeName: AudioSeHandler, Assembly-CSharp
+        m_MethodName: PlaySE
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 92bbb9cdfe8204de197af7583fba5a2b, type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  itemPrefab: {fileID: 7252107820092985909, guid: 775d701459ea78d41a72df6a3ed83247, type: 3}
 --- !u!114 &4466670779930375302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,7 +311,19 @@ MonoBehaviour:
   name: "\uAD6C\uC6B8"
   maxHp: 100
   hp: 100
-  power: 500
+  power: 20
+--- !u!114 &8571310715259098354
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466670779930375310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1cf55a1d4ff81f6478f4fc0d105cb2a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4466670780847169440
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemyController : CharactorController
 {
@@ -11,8 +12,14 @@ public class EnemyController : CharactorController
     [SerializeField] float eyeRange;
     [SerializeField] LayerMask eyeMask;
 
+    [SerializeField] UnityEvent OnAttackEvent;
+
+    [Header("ItemPrefab")]
+    [SerializeField] DropItem itemPrefab;
+
     Coroutine knockbackCoroutine;           // 넉백 코루틴.
     AttackableEnemy attackable;             // 공격 클래스.
+
     bool isKnockback;                       // 넉백 상태다.
     bool isInputLeft;                       // 왼쪽 입력을 했는가?
 
@@ -20,6 +27,7 @@ public class EnemyController : CharactorController
     {
         base.Start();
         attackable = GetComponent<AttackableEnemy>();
+        wallRayOffset = GetComponent<CapsuleCollider2D>().size.x;
 
         HpBarUI hpBar = HpBarManager.Instance.GetHpBar();       // HP매니저에게서 hpBar를 하나 꺼내온다.
         hpBar.Setup(hpPivot, stat);                             // 해당 hpBar에 내 정보를 세팅한다.
@@ -46,15 +54,23 @@ public class EnemyController : CharactorController
         anim.SetBool("isKnockback", isKnockback);
     }
 
+
+    Vector2 wallRayPos;     // 벽 체크 광선의 시작 위치.
+    Vector2 wallRayDir;     // 벽 체크 광선의 방향.
+    float wallRayOffset;    // 벽 체크 광선의 위치 수정 값.
+
     // 벽 체크.
     private void CheckWall()
-    {        
-        Vector2 dir = isInputLeft ? Vector2.left : Vector2.right;                           // 내가 입력한 방향의 벡터.
-        RaycastHit2D hit = Physics2D.Raycast(eyePivot.position, dir, eyeRange, eyeMask);    // 해당 벡터 방향으로 Ray발사.
+    {
+        wallRayDir = isInputLeft ? Vector2.left : Vector2.right;                           // 내가 입력한 방향의 벡터.
+        wallRayPos = eyePivot.position;
+        wallRayPos += (wallRayDir * wallRayOffset);
+
+        RaycastHit2D hit = Physics2D.Raycast(wallRayPos, wallRayDir, eyeRange, eyeMask);    // 해당 벡터 방향으로 Ray발사.
         if (hit.collider != null)
         {
             isInputLeft = !isInputLeft;     // 입력 값 반대로 돌리기.
-            Debug.Log("벽이 있다! 뒤 돌자");
+            Debug.Log("무언가 있다! 뒤 돌자 : " + hit.collider.name);
         }
     }
     private void CheckFall()
@@ -79,6 +95,7 @@ public class EnemyController : CharactorController
     protected override void OnAttack()
     {
         attackable.Attack(movement.moveDirection == VECTOR.Left);
+        OnAttackEvent?.Invoke();
     }
     protected override void Movement(float inputX)
     {
@@ -111,6 +128,10 @@ public class EnemyController : CharactorController
     }
     private void OnDeadDestroy()
     {
+        // 몬스터가 죽고 사라질 때 아이템 생성 후 위로 던지기.
+        DropItem item = Instantiate(itemPrefab, transform.position, transform.rotation);
+        item.ShowItem();
+
         Destroy(gameObject);
     }
 
@@ -121,7 +142,7 @@ public class EnemyController : CharactorController
             Gizmos.color = Color.blue;
 
             // 벽 체크 Ray.
-            Gizmos.DrawRay(eyePivot.position, (isInputLeft ? Vector2.left : Vector2.right) * eyeRange);
+            Gizmos.DrawRay(wallRayPos, wallRayDir * eyeRange);
 
             // 절벽 체크 Ray.
             Vector2 dir = isInputLeft ? Vector2.left : Vector2.right;
