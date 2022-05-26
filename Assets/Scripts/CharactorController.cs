@@ -55,7 +55,6 @@ public abstract class CharactorController : MonoBehaviour
             return;
 
         stat.hp = Mathf.Clamp(stat.hp - power, 0, stat.maxHp);
-        movement.OnStopForce();
         OnEndAttack();
         OnUpdateUI();
 

@@ -219,6 +219,10 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   itemPrefab: {fileID: 7252107820092985909, guid: 775d701459ea78d41a72df6a3ed83247, type: 3}
+  itemTable:
+  - {fileID: 11400000, guid: b043883e43a43ef4e8d0f7d1cf25425b, type: 2}
+  - {fileID: 11400000, guid: e9c119ef880939845af98f437c20b5a5, type: 2}
+  - {fileID: 11400000, guid: fdafa546fa2e97b4eb7f526685905688, type: 2}
 --- !u!114 &4466670779930375302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -281,6 +285,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 4466670779930375311}
+  movement: {fileID: 4466670779930375302}
+  damageUiPivot: {fileID: 4466670781148434851}
+  knockbackDir: {x: 0.7, y: 1}
+  knockbackPower: 2
   OnDamageEvent:
     m_PersistentCalls:
       m_Calls:

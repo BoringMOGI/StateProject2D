@@ -5,11 +5,6 @@ using UnityEngine.Events;       // 이벤트 관련 클래스.
 
 public abstract class ItemObject : MonoBehaviour
 {
-    [SerializeField] Animator anim;
-
-    [Header("Event")]
-    [SerializeField] UnityEvent OnEatItemEvent;
-
     // 콜라이더가 충돌체랑 충돌했을 때.
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -24,16 +19,9 @@ public abstract class ItemObject : MonoBehaviour
         PlayerController player = collision.GetComponent<PlayerController>();
         if(player != null)
         {
-            // 이벤트 호출.
-            anim.SetTrigger("onEat");
-            OnEatItemEvent?.Invoke();       // 등록 이벤트 호출.
             OnEatItem(player);              // 아이템 먹기 함수 호출.
         }
     }
 
-    private void OnEndEffect()
-    {
-        Destroy(gameObject);
-    }
     protected abstract void OnEatItem(PlayerController player);
 }

@@ -16,6 +16,7 @@ public class EnemyController : CharactorController
 
     [Header("ItemPrefab")]
     [SerializeField] DropItem itemPrefab;
+    [SerializeField] ItemData[] itemTable;
 
     Coroutine knockbackCoroutine;           // 넉백 코루틴.
     AttackableEnemy attackable;             // 공격 클래스.
@@ -113,7 +114,9 @@ public class EnemyController : CharactorController
     }
     protected override void Dead()
     {
-        
+        // 몬스터가 죽으면 물리 연산을 종료한다.
+        rigid.simulated = false;
+        collider2D.enabled = false;
     }
     protected override void OnUpdateUI()
     {
@@ -130,8 +133,8 @@ public class EnemyController : CharactorController
     {
         // 몬스터가 죽고 사라질 때 아이템 생성 후 위로 던지기.
         DropItem item = Instantiate(itemPrefab, transform.position, transform.rotation);
-        item.ShowItem();
-
+        ItemData dropItemData = itemTable[Random.Range(0, itemTable.Length)];
+        item.SetupItem(dropItemData);
         Destroy(gameObject);
     }
 

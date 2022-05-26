@@ -94,6 +94,7 @@ public class Movement2D : MonoBehaviour
         isGrounded = false;                                     // 날아가기 때문에 땅에 있지 않다.
         rigid.velocity = Vector2.zero;                          // 힘을 더하기 전에 zero로 초기화.
         rigid.AddForce(dir * power, ForceMode2D.Impulse);       // dir방향으로 power만큼의 힘을 가한다.
+        Debug.Log(rigid.velocity.ToString());
     }
 
     private void OnDrawGizmos()

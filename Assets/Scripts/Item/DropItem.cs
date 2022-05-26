@@ -4,22 +4,31 @@ using UnityEngine;
 
 public class DropItem : ItemObject
 {
-    [SerializeField] BoxCollider2D boxCollider;
-    [SerializeField] Rigidbody2D rigid;
+    [SerializeField] AnimationFX eatFx;
 
-    [Header("Item")]
-    [SerializeField] string itemName;
+    SpriteRenderer spriteRenderer;
+    Rigidbody2D rigid;
+    ItemData itemData;
 
     protected override void OnEatItem(PlayerController player)
     {
-        boxCollider.enabled = false;    // 충돌체 끄기.
-        rigid.simulated = false;        // 물리 연산X
+        Debug.Log("아이템 획득 : " + itemData.itemName);
 
-        Debug.Log("플레이어에게 아이템 전달 : " + itemName);
+        // 아이템 획득 이펙트 재생.
+        if (eatFx != null)
+            Instantiate(eatFx, transform.position, transform.rotation);
+
+        Destroy(gameObject);
     }
-
-    public void ShowItem()
+    public void SetupItem(ItemData itemData)
     {
+        // 컴포넌트 검색.
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        rigid = GetComponent<Rigidbody2D>();
+
+        // 아이템 세팅.
+        this.itemData = itemData;
+        spriteRenderer.sprite = itemData.itemSprite;
         rigid.AddForce(Vector2.up * 3f, ForceMode2D.Impulse);
     }
 }

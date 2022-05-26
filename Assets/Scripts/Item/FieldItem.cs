@@ -4,12 +4,22 @@ using UnityEngine;
 
 public class FieldItem : ItemObject
 {
-    [SerializeField] int amount;
-    [SerializeField] BoxCollider2D boxCollider;
+    public enum FIELD_ITEM
+    {
+        GEM,        // ∫∏ºÆ.
+    }
+
+    [SerializeField] ItemData itemData;
+    [SerializeField] FIELD_ITEM itemType;
+
+    private void Start()
+    {
+        
+    }
 
     protected override void OnEatItem(PlayerController player)
     {
-        boxCollider.enabled = false;
-        player.GetGem(amount);
+        Debug.Log("æ∆¿Ã≈€ »πµÊ : " + itemData.itemName);
+        Destroy(gameObject);
     }
 }

@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7252107820092985913}
   - component: {fileID: 7252107820092985914}
   - component: {fileID: 7252107820092985915}
-  - component: {fileID: 7252107820092985908}
   - component: {fileID: 7252107820092985909}
   m_Layer: 12
   m_Name: DropItem
@@ -77,7 +76,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: a38de2af0ebcd1d438398af9491043ac, type: 3}
+  m_Sprite: {fileID: -284980689, guid: cd68324e0ba5f224fbe2d83d35b1e140, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -101,18 +100,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.18333334}
+  m_Offset: {x: 0, y: 0.04987064}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.26666668, y: 0.36666667}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.6355, y: 0.6355}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.26666668, y: 0.36666667}
+  m_Size: {x: 0.41518593, y: 0.50025874}
   m_EdgeRadius: 0
 --- !u!50 &7252107820092985915
 Rigidbody2D:
@@ -135,26 +134,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!95 &7252107820092985908
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7252107820092985910}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: fcd12bb2a98c56c4aa6a34fae4ec4bb0, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &7252107820092985909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,10 +146,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ccd219488f55b4bb95d924a76dcebb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 7252107820092985908}
-  OnEatItemEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  boxCollider: {fileID: 7252107820092985914}
-  rigid: {fileID: 7252107820092985915}
-  itemName: "\uBE68\uAC15 \uD3EC\uC158"
+  eatFx: {fileID: 8530101479599416128, guid: ad8deee26318c0744bc3d1f61d1ac65a, type: 3}

@@ -34,6 +34,7 @@ public class PlayerController : CharactorController
         // 공격중이 아니고 살아있을 경우 제어가능.
         if (!isAttack && isAlive && !isLockMovement)
         {
+            Debug.Log("IN");
             Movement(inputX);
             Jump();
             Attack();
@@ -55,7 +56,6 @@ public class PlayerController : CharactorController
     {
         movement.Move(x);                           // 실제 움직임을 담당하는 Movement2D에 x입력 값 전달.
     }
-
     private void Jump(bool isForce = false)
     {   
         // 점프키를 눌렀을 때, movement에게 Jump함수를 호출.
@@ -65,25 +65,18 @@ public class PlayerController : CharactorController
             anim.SetTrigger("onJump");
         }
     }
-
-
-
     public void GetGem(int amount)
     {
         gem += amount;
         OnUpdateUI();
     }
 
-
-
     // 이벤트 함수.
     protected override void Damaged(Transform attacker, int power)
     {
-        // 상대와 나의 방향을 생각해서 날려보낸다.
-        bool isLeftTarget = transform.position.x > attacker.position.x;
-        Vector2 dir = new Vector2(isLeftTarget ? 1 : -1, 1);
-        movement.Throw(dir, 1.5f);
-        isLockMovement = true;
+        isLockMovement = true;          // 이동 잠금.
+
+        Debug.Log("LOCK");
 
         // 날아간 이후 땅에 착지했는지 체크하는 코루틴.
         StartCoroutine(CheckEndThrow());
